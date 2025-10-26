@@ -20,42 +20,48 @@ return {
 		-- 	},
 		-- })
 	},
-	  config = function(_, opts)
-	    local blink = require("blink.cmp")
-	    local configs = require("lspconfig.configs")  -- ✅ public, safe module
-
-	    for server, server_opts in pairs(opts.servers) do
-	      -- Ensure defaults for this server are loaded
-	      if not configs[server] then
-		local ok, def = pcall(require, "lspconfig.server_configurations." .. server)
-		if ok and type(def) == "table" then
-		  configs[server] = def
-		else
-		  vim.notify("LSP: no configuration found for " .. server, vim.log.levels.WARN)
+	config = function()
+		-- 1. Setup capabilities for completion/snippets
+		-- This is where you connect Neovim's LSP client to blink.cmp's capabilities.
+		-- This *needs* to be run here so LSP starts with the right info,
+		-- but it does *not* force the completion plugins to load until InsertEnter.
+		local capabilities = vim.lsp.protocol.make_client_capabilities()
+		local cmp_ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
+		if cmp_ok then
+			capabilities = vim.tbl_deep_extend(
+				"force",
+				capabilities,
+				cmp_lsp.default_capabilities()
+			)
 		end
-	      end
 
-	      -- Build the full config
-	      server_opts.capabilities = blink.get_lsp_capabilities(server_opts.capabilities)
-	      local config = vim.lsp.config(server, server_opts)
+		-- 2. Setup a common handler for ALL Mason-installed LSPs
+		-- This is the function that runs when mason-lspconfig sees a server is installed.
+		-- It uses the new native Neovim API: vim.lsp.config()
+		local mason_lspconfig = require("mason-lspconfig")
+		mason_lspconfig.setup({
+			ensure_installed = {}, -- Define your list of LSPs to install here (e.g., { "pyright", "lua_ls" })
+			handlers = {
+				-- The default handler is a function that runs for every server
+				function(server_name)
+					require("lspconfig")[server_name].setup({
+						capabilities = capabilities,
+						-- Add any global settings for all LSPs here
+					})
+				end,
 
-	      if not config then
-		vim.notify("LSP: failed to create config for " .. server, vim.log.levels.ERROR)
-	      else
-		vim.api.nvim_create_autocmd("FileType", {
-		  pattern = config.filetypes or {},
-		  callback = function()
-		    vim.lsp.start(config)
-		  end,
+				-- You can override the default for a specific server (e.g., 'lua_ls') here
+				-- ['lua_ls'] = function()
+				--   require('lspconfig').lua_ls.setup({
+				--     capabilities = capabilities,
+				--     settings = { ... }
+				--   })
+				-- end,
+			},
 		})
-	      end
-	    end
-	  end,
+	end,
 	keys = {},
 	dependencies = {
-		"echasnovski/mini.completion",
-		"echasnovski/mini.snippets",
-  		"saghen/blink.cmp",
 		"nvimtools/none-ls.nvim",
 	},
 }

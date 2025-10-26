@@ -2,6 +2,7 @@ return {
   	'saghen/blink.cmp',
 	version = '1.*',
 	lazy = true,
+	event = { "InsertEnter" },
 	cmd = {},
 	---@module 'blink.cmp'
 	---@type blink.cmp.Config
@@ -45,6 +46,8 @@ return {
 	},
 	dependencies = {
 		"echasnovski/mini.snippets",
+		"neovim/nvim-lspconfig",
+		"echasnovski/mini.completion",
 	},
   	opts_extend = { "sources.default" },
 }

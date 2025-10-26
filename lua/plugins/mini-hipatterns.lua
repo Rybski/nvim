@@ -1,6 +1,7 @@
 return {
 	"echasnovski/mini.hipatterns",
-	lazy = false,
+	lazy = true,
+	event = { "BufReadPre", "BufNewFile" },
 	cmd = {},
 	opts = {},
 	keys = {},

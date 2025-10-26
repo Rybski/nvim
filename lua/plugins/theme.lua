@@ -1,6 +1,7 @@
 return {
   "ellisonleao/gruvbox.nvim",
-  lazy = false,
+  lazy = true,
+  event = { "VimEnter" },
   config = function()
     -- Try Omarchy current theme logic
     local theme_path = vim.fn.stdpath("config") .. "/../omarchy/current/theme/neovim.lua"

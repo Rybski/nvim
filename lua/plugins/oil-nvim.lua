@@ -1,6 +1,6 @@
 return {
 	"stevearc/oil.nvim",
-	lazy = false,
+	lazy = true,
 	cmd = "Oil",
 	opts = {
 		skip_confirm_for_simple_edits = "true",

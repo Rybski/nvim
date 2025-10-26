@@ -1,6 +1,6 @@
 return {
 	"echasnovski/mini.completion",
-	lazy = false,
+	lazy = true,
 	cmd = {},
 	opts = {},
 	keys = {

@@ -1,6 +1,6 @@
 return {
     	"mason-org/mason.nvim",
-	lazy = false,
+	lazy = true,
 	cmd = {},
 	opts = {},
 	keys = {},

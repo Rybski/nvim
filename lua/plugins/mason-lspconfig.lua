@@ -1,6 +1,7 @@
 return {
     	"mason-org/mason-lspconfig.nvim",
-	lazy = false,
+	lazy = true,
+	event = {"BufReadPre", "BufNewFile"},
 	cmd = {},
 	opts = {},
 	keys = {},

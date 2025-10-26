@@ -1,6 +1,7 @@
 return {
 	"echasnovski/mini.statusline",
-	lazy = false,
+	lazy = true,
+	event = { "VimEnter" },
 	cmd = {},
 	opts = {},
 	keys = {},
