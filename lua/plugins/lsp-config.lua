@@ -1,7 +1,7 @@
 return {
 	"neovim/nvim-lspconfig",
-	lazy = false,
-	-- event = "VeryLazy",
+	lazy = true,
+	event = { "BufReadPre", "BufNewFile" },
 	cmd = {},
 	fmt = {
 		".rs",
@@ -12,8 +12,6 @@ return {
 	},
 	opts = {
 		servers = {
-			lua_ls = {},
-			rust_analyzer = {},
 		}
 		-- vim.lsp.config('rust_analyzer', {
 		-- 	-- Server-specific settings. See `:help lsp-quickstart`
@@ -22,15 +20,37 @@ return {
 		-- 	},
 		-- })
 	},
-	config = function(_, opts)
-		local lspconfig = require('lspconfig')
-		for server, config in pairs(opts.servers) do
-		-- passing config.capabilities to blink.cmp merges with the capabilities in your
-		-- `opts[server].capabilities, if you've defined it
-		config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
-		lspconfig[server].setup(config)
+	  config = function(_, opts)
+	    local blink = require("blink.cmp")
+	    local configs = require("lspconfig.configs")  -- ✅ public, safe module
+
+	    for server, server_opts in pairs(opts.servers) do
+	      -- Ensure defaults for this server are loaded
+	      if not configs[server] then
+		local ok, def = pcall(require, "lspconfig.server_configurations." .. server)
+		if ok and type(def) == "table" then
+		  configs[server] = def
+		else
+		  vim.notify("LSP: no configuration found for " .. server, vim.log.levels.WARN)
 		end
-	end,
+	      end
+
+	      -- Build the full config
+	      server_opts.capabilities = blink.get_lsp_capabilities(server_opts.capabilities)
+	      local config = vim.lsp.config(server, server_opts)
+
+	      if not config then
+		vim.notify("LSP: failed to create config for " .. server, vim.log.levels.ERROR)
+	      else
+		vim.api.nvim_create_autocmd("FileType", {
+		  pattern = config.filetypes or {},
+		  callback = function()
+		    vim.lsp.start(config)
+		  end,
+		})
+	      end
+	    end
+	  end,
 	keys = {},
 	dependencies = {
 		"echasnovski/mini.completion",
