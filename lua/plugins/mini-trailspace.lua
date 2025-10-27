@@ -4,6 +4,8 @@ return {
 	event = { "BufReadPre", "BufNewFile" },
 	cmd = {},
 	opts = {},
-	keys = {},
+	keys = {
+		{ "<leader>s", "<cmd>lua MiniTrailspace.trim()<cr>", desc="Trim Trailspaces"},
+	},
 	dependencies = {},
 }

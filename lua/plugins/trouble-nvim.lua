@@ -13,8 +13,8 @@ return {
 		},
 	},
 	keys = {
-		{ "<leader>dd", "<cmd>Trouble diagnostics toggle focus=True filter.buf=0<cr>", desc="Open local diagnostics" },
-		{ "<leader>dp", "<cmd>Trouble diagnostics toggle focus=True<cr>", desc="Open project diagnostics" },
+		{ "<leader>dd", "<cmd>Trouble diagnostics toggle focus=True filter.buf=0<cr>", desc="Open Local Diagnostics (Trouble)" },
+		{ "<leader>dp", "<cmd>Trouble diagnostics toggle focus=True<cr>", desc="Open Project Diagnostics (Trouble)" },
 	},
 	dependencies = {
 		{ "echasnovski/mini.icons", opts={} },

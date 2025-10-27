@@ -4,8 +4,10 @@ return {
 	cmd = {},
 	opts = {},
 	keys = {
-		-- { "<leader>d", "<cmd>lua MiniExtra.pickers.diagnostic()<cr>" , mode={"n"} , desc="Open diagnostics" },
+		{ "<leader>dm", "<cmd>lua MiniExtra.pickers.diagnostic({scope='all'})<cr>" , mode={"n"} , desc="Open Project Diagnostics (Mini)" },
+		{ "<leader>dn", "<cmd>lua MiniExtra.pickers.diagnostic({scope='current'})<cr>" , mode={"n"} , desc="Open File Diagnostics (Mini)" },
 		{ "<leader>p", "<cmd>lua MiniExtra.pickers.hipatterns()<cr>" , mode={"n"} , desc="Open patterns" },
+		{ "<leader>g", "<cmd>lua MiniExtra.pickers.git_files({scope='modified'})", move={"n"}, desc="Git"},
 	},
 	dependencies = {
 		"echasnovski/mini.pick",
